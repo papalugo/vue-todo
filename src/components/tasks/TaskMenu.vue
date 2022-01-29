@@ -23,34 +23,57 @@
         </v-list-item>
       </v-list>
     </v-menu>
-    <dialog-edit>
-      
-    </dialog-edit>
+    <DialogEdit
+      v-if="items[0].modal"
+      @closeDialog="closeDialog(items[0])"
+      :task="task"
+    >     
+    </DialogEdit>
+    <DialogDelete
+      v-if="items[1].modal"
+      @closeDialog="closeDialog(items[1])"
+      :task="task"
+    >     
+    </DialogDelete>
   </div>
 </template>
 
 <script>
 import DialogEdit from '../Dialog/DialogEdit.vue';
+import DialogDelete from '../Dialog/DialogDelete.vue';
 export default {
-  components: { DialogEdit },
+  components: { 
+    DialogEdit,
+    DialogDelete
+  },
   data: () => ({
     items: [
       { 
         icon: "mdi-pencil",
         title: "Edit",
+        modal: false,
         action(){
           console.log("editar");
+          this.modal = true;
         }
       },
       { 
         icon: "mdi-trash-can",
         title: "Remove",
+        modal: false,
         action() {
           console.log("remove");
+          this.modal = true;
         } 
       },
     ],
   }),
+  props: ['task'],
+  methods: {
+    closeDialog(itemMenu) {
+      itemMenu.modal = false;
+    }
+  } 
 };
 </script>
 

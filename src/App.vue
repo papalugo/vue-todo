@@ -96,7 +96,7 @@
       drawer: false,
       items: [
           { title: 'Dashboard', icon: 'mdi-view-dashboard', to: '/' },
-          { title: 'Tarefa', icon: 'mdi-call-split', to: '/tarefa' },
+          { title: 'Task', icon: 'mdi-call-split', to: '/task' },
           { title: 'About', icon: 'mdi-help-box', to: '/about' },
         ],
       right: false,

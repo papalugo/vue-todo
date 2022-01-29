@@ -22,11 +22,11 @@
         active-class=""
       >
       <div
-        v-for="tarefa, index in $store.state.tasks"
+        v-for="task, index in $store.state.tasks"
         :key="index"
       >
-        <tarefa-componnent
-          :tarefa="tarefa"
+        <TaskComponnent
+          :task="task"
         />
       </div>
 
@@ -38,15 +38,15 @@
 <script lang="ts">
   import Vue from 'vue';
   import Vuex from 'vuex';
-  import TarefaComponnent from '../components/tarefas/Tarefa.vue';
+  import TaskComponnent from '../components/tasks/Task.vue';
 
   Vue.use(Vuex);
 
   export default Vue.extend({
-    name: 'Tarefa',
+    name: 'Task',
 
     components: {
-      TarefaComponnent
+      TaskComponnent
     },
     data: () => ({
       fieldInput: null,
