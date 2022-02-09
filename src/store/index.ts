@@ -1,33 +1,85 @@
+import PouchDB from 'pouchdb';
 import Vue from 'vue';
 import Vuex from 'vuex';
+
+let db = new PouchDB("tasksdocs");
 
 Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    tasks: [
-      {id: 1, title: "Ir ao mercado", finished: false},
-      {id: 2, title: "Pegar insumos para cerveja", finished: true}
-    ]
+    tasks: []
   },
+
   mutations: {
+    findTasks(state) {
+      state.tasks= [];
+      // console.log("relendo tasks...");
+      db.allDocs({include_docs: true}).then((docs) => {
+        for(let i =0; i< docs.rows.length; i++) {
+          // console.log(docs.rows[i].doc);
+          state.tasks.push(docs.rows[i].doc);
+        }
+      }).catch((error) => {
+        console.log("Error: ", error);
+      });
+    },
+
     addTask(state, title) {
       if (title) {
-        state.tasks.unshift({id: new Date().getTime(), title, finished: false});
+        let newTitle = {
+          _id: ""+new Date().getTime(), 
+          title: title, 
+          finished: false
+        };
+
+        db.put(newTitle).then(() => {
+          console.log("Trask criado");
+        }).catch((error) => {
+          console.log("Error: ", error);
+        });
       }
     },
+
     removeTask(state, id) {
-      state.tasks = state.tasks.filter(task => task.id !== id);
+      db.get(id)
+      .then((task) => {
+        console.log(task._id);
+        return db.remove(task);
+      })
+      .catch((error) => {
+        console.log("Error: ", error);
+      });
     },
-    saveTask(state, newTask) {
-      let task = state.tasks.filter(task => task.id == newTask.id)[0];
-      if (task)  {
-        task.title = newTask.title;
-      }
+
+    updateTask(state, newTask) {
+      db.get(newTask._id).then((task) => {
+        return db.put({
+          _id: newTask._id,
+          _rev: task._rev,
+          title: newTask.title          
+        });
+      });
     },
   },
   actions: {
-  },
-  modules: {
+    addTaskAction({commit},  title) {
+      commit('addTask', title);
+      commit('findTasks');
+    },
+
+    updateTaskAction({commit}, task) {
+      commit('updateTask', task);
+      setTimeout(() =>{
+        commit('findTasks');
+      },100);
+    },
+
+    removeTaskAction({commit},  id) {
+      commit('removeTask', id);
+      setTimeout(() =>{
+        commit('findTasks');
+      },100);
+    }
   }
 })

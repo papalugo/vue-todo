@@ -53,9 +53,13 @@
     }),
     methods: {
       handleAddTask() {
-        this.$store.commit('addTask', this.fieldInput);
+        // this.$store.commit('addTask', this.fieldInput);
+        this.$store.dispatch('addTaskAction', this.fieldInput);
         this.fieldInput = null;
       }
+    },
+    created() {
+      this.$store.commit('findTasks');
     }
-  })
+  })  
 </script>

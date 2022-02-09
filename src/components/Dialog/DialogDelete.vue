@@ -40,7 +40,7 @@ export default {
   },
   methods: {
     handleRemove() {
-      this.$store.commit('removeTask', this.task.id);
+      this.$store.dispatch('removeTaskAction', this.task._id);
       this.$emit('closeDialog');
     }
   }

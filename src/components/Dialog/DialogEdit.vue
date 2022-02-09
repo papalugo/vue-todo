@@ -50,7 +50,7 @@ export default {
   },
   methods: {
     handleSave() {
-      this.$store.commit('saveTask', {title: this.title, id: this.task.id});
+      this.$store.dispatch('updateTaskAction', {title: this.title, _id: this.task._id});
       this.$emit('closeDialog');
     }
   }
